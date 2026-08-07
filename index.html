@@ -25,7 +25,7 @@
 
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://seu-utilizador.github.io/emidio-jorge-1-ano/">
+  <meta name="twitter:url" content="https://emidioborges.github.io/">
   <meta name="twitter:title" content="O Meu Primeiro Aniversário - Emídio Jorge 🎉">
   <meta name="twitter:description" content="Vem festejar connosco! Descubra os momentos mais marcantes do 1º ano do Emídio Jorge e os detalhes da festa em Assomada.">
   <meta name="twitter:image" content="https://emidioborges.github.io/assets/convite_emidio_jorge.png">
@@ -208,6 +208,24 @@
       cursor: pointer;
     }
 
+    /* Local Placeholder Box (Fallback when image fails) */
+    .media-placeholder {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      border-radius: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      gap: 8px;
+      border: 2px dashed #cbd5e1;
+    }
+
     .card-desc {
       font-size: 0.95rem;
       color: var(--text-dark);
@@ -363,7 +381,7 @@
 
         const mediaHtml = item.mediaType === 'video'
           ? `<video src="${item.mediaUrl}" class="card-media" onclick="openModal('${item.mediaUrl}', 'video', '${item.title}', '${item.description}')"></video>`
-          : `<img src="${item.mediaUrl}" alt="${item.title}" class="card-media" onclick="openModal('${item.mediaUrl}', 'image', '${item.title}', '${item.description}')" onerror="this.src='https://via.placeholder.com/600x400?text=Foto+Em%C3%ADdio+Jorge'">`;
+          : `<img src="${item.mediaUrl}" alt="${item.title}" class="card-media" onclick="openModal('${item.mediaUrl}', 'image', '${item.title}', '${item.description}')" onerror="handleImageError(this, '${item.title}')">`;
 
         itemDiv.innerHTML = `
           <div class="timeline-node"></div>
@@ -379,6 +397,13 @@
       });
     }
 
+    function handleImageError(imgElement, title) {
+      const placeholderDiv = document.createElement('div');
+      placeholderDiv.className = 'media-placeholder';
+      placeholderDiv.innerHTML = `<span>📸</span> <span>${title}</span>`;
+      imgElement.parentNode.replaceChild(placeholderDiv, imgElement);
+    }
+
     function openModal(url, type, title, desc) {
       const modal = document.getElementById('mediaModal');
       const modalBody = document.getElementById('modalBody');
@@ -388,7 +413,7 @@
       if (type === 'video') {
         modalBody.innerHTML = `<video src="${url}" controls autoplay style="width:100%; border-radius:12px;"></video>`;
       } else {
-        modalBody.innerHTML = `<img src="${url}" style="width:100%; border-radius:12px;">`;
+        modalBody.innerHTML = `<img src="${url}" style="width:100%; border-radius:12px;" onerror="this.outerHTML='<div class=\'media-placeholder\'>📸 ${title}</div>'">`;
       }
       modal.style.display = 'flex';
     }
