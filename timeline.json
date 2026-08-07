@@ -63,6 +63,17 @@
       "category": "Aventura"
     },
     {
+      "id": 5,
+      "date": "2026-07-07",
+      "displayDate": "7 de Julho de 2026",
+      "title": "Brincadeiras",
+      "description": "A andar nos carrinhos de brincar e a espalhar alegria por onde passa!",
+      "mediaType": "image",
+      "mediaUrl": "14524.jpg",
+      "highlight": false,
+      "category": "Aventura"
+    },
+    {
       "id": 6,
       "date": "2026-09-01",
       "displayDate": "1 de Setembro de 2026 - 14:00h",
