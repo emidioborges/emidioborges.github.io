@@ -16,7 +16,7 @@
   <meta property="og:url" content="https://emidioborges.github.io/">
   <meta property="og:title" content="O Meu Primeiro Aniversário - Emídio Jorge 🎉">
   <meta property="og:description" content="Vem festejar connosco! Descubra os momentos mais marcantes do 1º ano do Emídio Jorge e os detalhes da festa em Assomada.">
-  <meta property="og:image" content="https://emidioborges.github.io/assets/og-image.png">
+  <meta property="og:image" content="https://emidioborges.github.io/assets/convite_emidio_jorge.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -28,7 +28,10 @@
   <meta name="twitter:url" content="https://emidioborges.github.io/">
   <meta name="twitter:title" content="O Meu Primeiro Aniversário - Emídio Jorge 🎉">
   <meta name="twitter:description" content="Vem festejar connosco! Descubra os momentos mais marcantes do 1º ano do Emídio Jorge e os detalhes da festa em Assomada.">
-  <meta name="twitter:image" content="https://emidioborges.github.io/assets/og-image.png">
+  <meta name="twitter:image" content="https://emidioborges.github.io/assets/convite_emidio_jorge.png">
+
+  <!-- Canvas Confetti Library (External JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,7 +87,7 @@
     header.hero {
       background: linear-gradient(135deg, #fff3e6 0%, #ffe8d6 100%);
       text-align: center;
-      padding: 60px 20px 40px;
+      padding: 50px 20px 40px;
       border-bottom-left-radius: 40px;
       border-bottom-right-radius: 40px;
       position: relative;
@@ -101,18 +104,76 @@
       font-size: 1.1rem;
       color: var(--text-muted);
       max-width: 600px;
-      margin: 0 auto 25px;
+      margin: 0 auto 20px;
     }
 
     .invitation-badge {
       display: inline-block;
       background: #ffffff;
-      padding: 15px 30px;
+      padding: 12px 25px;
       border-radius: 30px;
       box-shadow: var(--shadow);
       font-weight: 600;
       color: var(--accent);
-      margin-top: 10px;
+      margin-top: 5px;
+    }
+
+    /* Countdown Component */
+    .countdown-container {
+      margin: 25px auto 0;
+      background: #ffffff;
+      padding: 18px 25px;
+      border-radius: 24px;
+      display: inline-block;
+      box-shadow: var(--shadow);
+      border: 2px solid #ffb703;
+    }
+
+    .countdown-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .countdown-box {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .time-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 50px;
+    }
+
+    .time-unit span {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1d2d44;
+      line-height: 1;
+    }
+
+    .time-unit label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .time-separator {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-top: -12px;
     }
 
     /* Timeline Container */
@@ -288,6 +349,9 @@
       .timeline-item.left, .timeline-item.right { left: 0; text-align: left; }
       .timeline-item.left .timeline-node, .timeline-item.right .timeline-node { left: 10px; }
       header.hero h1 { font-size: 2.1rem; }
+      .countdown-box { gap: 10px; }
+      .time-unit { min-width: 40px; }
+      .time-unit span { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -309,6 +373,22 @@
     <p class="subtitle" id="heroSubtitle">Uma viagem inesquecível do nascimento ao 1º aniversário</p>
     <div class="invitation-badge">
       📍 Assomada | 🗓️ 1 de Setembro de 2026 às 14:00h
+    </div>
+
+    <!-- Countdown Timer -->
+    <div>
+      <div class="countdown-container" id="countdownContainer">
+        <div class="countdown-title">⏳ Contagem Decrescente para a Festa</div>
+        <div class="countdown-box">
+          <div class="time-unit"><span id="days">00</span><label>Dias</label></div>
+          <div class="time-separator">:</div>
+          <div class="time-unit"><span id="hours">00</span><label>Horas</label></div>
+          <div class="time-separator">:</div>
+          <div class="time-unit"><span id="minutes">00</span><label>Min</label></div>
+          <div class="time-separator">:</div>
+          <div class="time-unit"><span id="seconds">00</span><label>Seg</label></div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -352,6 +432,69 @@
       audioPlaying = !audioPlaying;
     }
 
+    // Trigger celebratory Confetti / Fireworks effect on page load
+    function launchConfettiCelebration() {
+      if (typeof confetti !== 'function') return;
+
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.7 }
+        });
+        confetti({
+          particleCount: 50,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.7 }
+        });
+      }, 350);
+    }
+
+    // Countdown Timer Logic using eventDate
+    function initCountdown(eventDateStr) {
+      if (!eventDateStr) return;
+      const targetDate = new Date(eventDateStr).getTime();
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+          const container = document.getElementById('countdownContainer');
+          if (container) {
+            container.innerHTML = '<div class="countdown-title" style="font-size: 1.2rem; margin: 0;">🎉 Chegou o Grande Dia! É Hoje! 🎉</div>';
+          }
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const daysElem = document.getElementById('days');
+        const hoursElem = document.getElementById('hours');
+        const minutesElem = document.getElementById('minutes');
+        const secondsElem = document.getElementById('seconds');
+
+        if (daysElem) daysElem.innerText = String(days).padStart(2, '0');
+        if (hoursElem) hoursElem.innerText = String(hours).padStart(2, '0');
+        if (minutesElem) minutesElem.innerText = String(minutes).padStart(2, '0');
+        if (secondsElem) secondsElem.innerText = String(seconds).padStart(2, '0');
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+
     async function initTimeline() {
       let data = defaultData;
 
@@ -365,6 +508,8 @@
       }
 
       renderTimeline(data);
+      initCountdown(data.eventDate);
+      launchConfettiCelebration();
     }
 
     function renderTimeline(data) {
