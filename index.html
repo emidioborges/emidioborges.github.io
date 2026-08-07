@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Meu Primeiro Aniversário - Emídio Jorge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #e65c00;
+      --primary-light: #ff8c00;
+      --accent: #2a9d8f;
+      --bg-color: #fdfbf7;
+      --card-bg: #ffffff;
+      --text-dark: #2c3e50;
+      --text-muted: #6c757d;
+      --border-radius: 20px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Floating Audio Player */
+    .audio-control {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 1000;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(230, 92, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .audio-control:hover { transform: scale(1.05); background: var(--primary-light); }
+
+    /* Hero Banner */
+    header.hero {
+      background: linear-gradient(135deg, #fff3e6 0%, #ffe8d6 100%);
+      text-align: center;
+      padding: 60px 20px 40px;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      position: relative;
+    }
+
+    header.hero h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.8rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    header.hero p.subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 25px;
+    }
+
+    .invitation-badge {
+      display: inline-block;
+      background: #ffffff;
+      padding: 15px 30px;
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 10px;
+    }
+
+    /* Timeline Container */
+    .timeline-container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .timeline-container::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #e2e8f0;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    /* Timeline Item */
+    .timeline-item {
+      position: relative;
+      margin-bottom: 50px;
+      width: 50%;
+      padding: 0 30px;
+    }
+
+    .timeline-item.left { left: 0; text-align: right; }
+    .timeline-item.right { left: 50%; text-align: left; }
+
+    .timeline-node {
+      position: absolute;
+      top: 20px;
+      width: 20px;
+      height: 20px;
+      background: var(--primary);
+      border: 4px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(230, 92, 0, 0.2);
+      z-index: 10;
+    }
+
+    .timeline-item.left .timeline-node { right: -10px; }
+    .timeline-item.right .timeline-node { left: -10px; }
+
+    /* Card Content */
+    .card {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+
+    .card.highlight {
+      border: 2px solid #ffb703;
+      background: #fffdf5;
+    }
+
+    .card-date {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+      color: #1d2d44;
+    }
+
+    .card-media {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      max-height: 280px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    /* Modal / Lightbox */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      max-width: 800px;
+      width: 100%;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      text-align: center;
+    }
+
+    .modal-content img, .modal-content video {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background: #2b2d42;
+      color: white;
+      margin-top: 60px;
+    }
+
+    footer h2 { font-family: 'Fredoka', sans-serif; margin-bottom: 10px; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .timeline-container::before { left: 20px; }
+      .timeline-item { width: 100%; padding-left: 50px; padding-right: 10px; }
+      .timeline-item.left, .timeline-item.right { left: 0; text-align: left; }
+      .timeline-item.left .timeline-node, .timeline-item.right .timeline-node { left: 10px; }
+      header.hero h1 { font-size: 2.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Audio Element -->
+  <audio id="bgAudio" loop>
+    <source src="assets/musica_fundo.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Audio Toggle Button -->
+  <button class="audio-control" id="audioToggleBtn" onclick="toggleAudio()">
+    🎵 <span>Música de Fundo</span>
+  </button>
+
+  <!-- Header / Hero Section -->
+  <header class="hero">
+    <h1 id="heroTitle">O Primeiro Aninho do Emídio Jorge</h1>
+    <p class="subtitle" id="heroSubtitle">Uma viagem inesquecível do nascimento ao 1º aniversário</p>
+    <div class="invitation-badge">
+      📍 Assomada | 🗓️ 1 de Setembro de 2026 às 14:00h
+    </div>
+  </header>
+
+  <!-- Timeline Section -->
+  <main class="timeline-container" id="timelineList">
+    <!-- Items rendered dynamically from JSON -->
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div class="modal" id="mediaModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <div id="modalBody"></div>
+      <h3 id="modalTitle" style="margin-top: 15px; font-family: 'Fredoka', sans-serif;"></h3>
+      <p id="modalDesc" style="color: var(--text-muted); margin-top: 5px;"></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <h2>Vem Festejar Connosco! 🎉</h2>
+    <p>Aguardamos a sua presença para celebrar o 1º aninho do Emídio Jorge.</p>
+  </footer>
+
+  <script>
+    // Embedded fallback JSON data to ensure standalone file functionality without web server CORS restrictions
+    const defaultData = {"title": "O Primeiro Aninho do Emídio Jorge", "subtitle": "Uma viagem inesquecível de 1 de Setembro de 2025 a 1 de Setembro de 2026", "childName": "Emídio Jorge", "birthDate": "2025-09-01", "eventDate": "2026-09-01T14:00:00", "eventLocation": "Assomada, Cabo Verde", "bgMusic": "assets/musica_fundo.mp3", "events": [{"id": 1, "date": "2025-09-01", "displayDate": "1 de Setembro de 2025", "title": "Bem-vindo ao Mundo, Emídio Jorge!", "description": "O dia mais feliz das nossas vidas. Nasceu o nosso pequeno grande amor!", "mediaType": "image", "mediaUrl": "assets/nascimento.jpg", "highlight": true, "category": "Nascimento"}, {"id": 2, "date": "2025-10-01", "displayDate": "1 de Outubro de 2025", "title": "1º Mês de Vida", "description": "Primeiras gargalhadas, noites curtas e muito carinho em família.", "mediaType": "image", "mediaUrl": "assets/1_mes.jpg", "highlight": false, "category": "Mesversário"}, {"id": 3, "date": "2025-12-25", "displayDate": "25 de Dezembro de 2025", "title": "Primeiro Natal", "description": "Um Natal recheado de amor, luzes e o melhor presente de todos no colo.", "mediaType": "image", "mediaUrl": "assets/natal.jpg", "highlight": true, "category": "Festividades"}, {"id": 4, "date": "2026-03-01", "displayDate": "1 de Março de 2026", "title": "Metade do Caminho (6 Meses)", "description": "Introdução alimentar, novas descobertas e a explorar o mundo ao redor.", "mediaType": "image", "mediaUrl": "assets/6_meses.jpg", "highlight": false, "category": "Desenvolvimento"}, {"id": 5, "date": "2026-06-15", "displayDate": "15 de Junho de 2026", "title": "Primeiros Passos & Brincadeiras", "description": "A andar nos carrinhos de brincar e a espalhar alegria por onde passa!", "mediaType": "image", "mediaUrl": "14526.jpg", "highlight": false, "category": "Aventura"}, {"id": 6, "date": "2026-09-01", "displayDate": "1 de Setembro de 2026 - 14:00h", "title": "O Meu 1º Aniversário!", "description": "Chegou o grande dia! Vem festejar connosco na Assomada às 14:00h.", "mediaType": "image", "mediaUrl": "watermarked_img_3466898923191960667.png", "highlight": true, "category": "Aniversário"}]};
+
+    let audioPlaying = false;
+    const audio = document.getElementById('bgAudio');
+    const audioBtn = document.getElementById('audioToggleBtn');
+
+    function toggleAudio() {
+      if (audioPlaying) {
+        audio.pause();
+        audioBtn.innerHTML = '🎵 <span>Música de Fundo</span>';
+      } else {
+        audio.play().catch(e => console.log('Áudio necessita de interação do utilizador'));
+        audioBtn.innerHTML = '🔊 <span>Pausar Música</span>';
+      }
+      audioPlaying = !audioPlaying;
+    }
+
+    async function initTimeline() {
+      let data = defaultData;
+
+      // Try fetching timeline.json dynamically if running via local/remote HTTP server
+      try {
+        const response = await fetch('timeline.json');
+        if (response.ok) {
+          data = await response.json();
+        }
+      } catch (e) {
+        console.log('A carregar os dados locais incorporados...');
+      }
+
+      renderTimeline(data);
+    }
+
+    function renderTimeline(data) {
+      if (data.title) document.getElementById('heroTitle').innerText = data.title;
+      if (data.subtitle) document.getElementById('heroSubtitle').innerText = data.subtitle;
+
+      const container = document.getElementById('timelineList');
+      container.innerHTML = '';
+
+      data.events.forEach((item, index) => {
+        const isLeft = index % 2 === 0;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `timeline-item ${isLeft ? 'left' : 'right'}`;
+
+        const mediaHtml = item.mediaType === 'video'
+          ? `<video src="${item.mediaUrl}" class="card-media" onclick="openModal('${item.mediaUrl}', 'video', '${item.title}', '${item.description}')"></video>`
+          : `<img src="${item.mediaUrl}" alt="${item.title}" class="card-media" onclick="openModal('${item.mediaUrl}', 'image', '${item.title}', '${item.description}')" onerror="this.src='https://via.placeholder.com/600x400?text=Foto+Em%C3%ADdio+Jorge'">`;
+
+        itemDiv.innerHTML = `
+          <div class="timeline-node"></div>
+          <div class="card ${item.highlight ? 'highlight' : ''}">
+            <div class="card-date">${item.displayDate}</div>
+            <h3 class="card-title">${item.title}</h3>
+            ${item.mediaUrl ? mediaHtml : ''}
+            <p class="card-desc">${item.description}</p>
+          </div>
+        `;
+
+        container.appendChild(itemDiv);
+      });
+    }
+
+    function openModal(url, type, title, desc) {
+      const modal = document.getElementById('mediaModal');
+      const modalBody = document.getElementById('modalBody');
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalDesc').innerText = desc;
+
+      if (type === 'video') {
+        modalBody.innerHTML = `<video src="${url}" controls autoplay style="width:100%; border-radius:12px;"></video>`;
+      } else {
+        modalBody.innerHTML = `<img src="${url}" style="width:100%; border-radius:12px;">`;
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('mediaModal').style.display = 'none';
+      document.getElementById('modalBody').innerHTML = '';
+    }
+
+    window.onclick = function(e) {
+      const modal = document.getElementById('mediaModal');
+      if (e.target === modal) closeModal();
+    };
+
+    document.addEventListener('DOMContentLoaded', initTimeline);
+  </script>
+</body>
+</html>
